@@ -11,7 +11,7 @@ ADD https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geo
 ADD https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat /loyalsoldier/geosite.dat
 
 # chainguard/static contains only tzdata and ca-certificates, can be built with multiarch static binaries.
-FROM --platform=linux/amd64 chainguard/static:latest
+FROM --platform=$TARGETOS alpine AS dist
 WORKDIR /var/log/xray
 COPY .github/docker/files/config.json /etc/xray/config.json
 COPY --from=build --chmod=755 /src/xray /usr/bin/xray
@@ -19,7 +19,7 @@ COPY --from=build --chmod=755 /src/xray /usr/bin/xray
 USER root
 WORKDIR /root
 VOLUME /etc/xray
-ARG TZ=Asia/Shanghai
+ARG TZ=Asia/Dubai
 ENV TZ=$TZ
 ENTRYPOINT [ "/usr/bin/xray" ]
 CMD [ "-confdir", "/etc/xray/" ]
